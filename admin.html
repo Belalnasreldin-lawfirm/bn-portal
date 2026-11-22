@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#14213d">
+<meta name="robots" content="noindex, nofollow">
+<meta name="format-detection" content="telephone=no, email=no, address=no">
+<title>إدارة المؤسسة</title>
+<link rel="manifest" href="admin.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f1e7;--card:#fffdf8;--ink:#14213d;--mute:#6b6a64;--gold:#a8832f;--line:#e3d9c3;--navy:#14213d;--onnavy:#f6f1e7;--red:#b3392f;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root{--bg:#0d1526;--card:#15203a;--ink:#f1ead9;--mute:#a7a89f;--gold:#c9a24a;--line:#2a3757;--navy:#0a111f;--onnavy:#f1ead9;--red:#e0675c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Naskh Arabic","Segoe UI",Tahoma,Arial,sans-serif;line-height:1.7;font-size:16px;font-variant-numeric:lining-nums}
+.top{background:var(--navy);color:var(--onnavy);border-bottom:2px solid var(--gold);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.top b{font-size:18px}
+.top small{display:block;color:var(--gold);font-size:12px}
+.wrap{max-width:760px;margin:0 auto;padding:0 14px 60px}
+button,input,select,textarea{font:inherit;color:inherit}
+.btn{background:var(--navy);color:var(--gold);border:1px solid var(--gold);padding:10px 16px;cursor:pointer;border-radius:2px;font-weight:700}
+.lnk{background:none;border:1px solid var(--gold);color:var(--gold);padding:6px 12px;border-radius:2px;cursor:pointer}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:12px 0 6px;position:sticky;top:0;background:var(--bg);z-index:5}
+.tabs button{flex:none;padding:8px 14px;background:var(--card);border:1px solid var(--line);cursor:pointer;border-radius:2px}
+.tabs button.on{border-color:var(--gold);color:var(--gold);font-weight:700}
+.bar{display:flex;gap:8px;margin:10px 0;flex-wrap:wrap}
+.bar input,.bar select{flex:1;min-width:130px}
+input,select,textarea{width:100%;padding:11px 12px;background:var(--bg);border:1px solid var(--line);border-radius:2px;font-size:16px}
+textarea{min-height:90px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--gold)}
+.it{background:var(--card);border:1px solid var(--line);border-inline-start:3px solid var(--gold);padding:12px 14px;margin-top:10px}
+.it .t{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.it small{color:var(--mute);font-size:13px}
+.it .m{color:var(--mute);font-size:14px;margin-top:2px;overflow-wrap:anywhere}
+.it .x{margin-top:6px;font-size:15px;white-space:pre-wrap;overflow-wrap:anywhere}
+.ac{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.ac button{background:none;border:1px solid var(--line);padding:5px 10px;cursor:pointer;border-radius:2px;font-size:14px}
+.ac button:hover{border-color:var(--gold)}
+.ac .dng{color:var(--red);border-color:var(--red)}
+.tag{display:inline-block;border:1px solid var(--gold);color:var(--gold);padding:0 8px;font-size:12px;margin-inline-start:6px}
+.card{background:var(--card);border:1px solid var(--line);padding:20px;margin-top:40px}
+label{display:block;font-size:13px;color:var(--mute);margin:12px 0 4px}
+.err{color:var(--red);min-height:22px;margin-top:10px}
+.ov{position:fixed;inset:0;background:rgba(10,17,31,.6);display:flex;align-items:flex-start;justify-content:center;padding:20px 12px;overflow:auto;z-index:20}
+.md{background:var(--card);border:1px solid var(--gold);padding:18px;width:100%;max-width:520px}
+.md h3{margin:0 0 6px;font-size:20px}
+.md .row{display:flex;gap:8px;margin-top:16px}
+.md .row button{flex:1}
+.pinbox{font:700 30px Lato,monospace;letter-spacing:4px;text-align:center;direction:ltr;border:1px dashed var(--gold);padding:14px;margin:12px 0;color:var(--gold);user-select:all}
+.toast{position:fixed;inset-inline:0;bottom:22px;margin:auto;width:max-content;max-width:90%;background:var(--navy);color:var(--onnavy);border:1px solid var(--gold);padding:10px 18px;z-index:30}
+.toast.bad{border-color:var(--red);color:#ffd9d4}
+.empty{color:var(--mute);text-align:center;padding:30px 0}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const API="https://script.google.com/macros/s/AKfycbxJUQ77gegUSGnxpPV-OLQiLH2Uee7dLnjES1yRhcBwvKlK9inrbHAGVuNCHke_sXZN/exec";
+const $=s=>document.querySelector(s),app=$("#app");
+const E=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const ERR={"Incorrect password.":"كلمة السر غير صحيحة.","Too many attempts. Please try again in 10 minutes.":"محاولات كثيرة. حاول بعد 10 دقائق.","Admin password is not set.":"لم تُعيَّن كلمة سر المدير بعد (من قائمة بوابة العملاء في الجدول).","Invalid client ID.":"رقم العميل غير صالح (حروف إنجليزية وأرقام فقط، من حرفين).","This client ID already exists.":"رقم العميل مستخدم من قبل.","Please enter a name.":"اكتب الاسم.","Unknown client.":"عميل غير معروف.","Invalid matter code.":"رمز القضية غير صالح (مثل M1).","Please enter a title.":"اكتب عنوان القضية.","This matter code already exists for this client.":"رمز القضية مستخدم لهذا العميل.","Unknown matter.":"قضية غير معروفة لهذا العميل.","Invalid date.":"التاريخ غير صالح.","Please enter a headline.":"اكتب عنوان المستجد.","Please enter the required action.":"اكتب الإجراء المطلوب.","The row has changed. Please refresh.":"تغيّر الصف. اضغط تحديث ثم أعد المحاولة.","The map link must start with https://":"رابط الخريطة يجب أن يبدأ بـ https://","Something went wrong. Please try again.":"حدث خطأ. حاول مرة أخرى."};
+let tk=null,D=null,tab="clients",F={c:"",m:"",q:""};
+const toast=(m,bad)=>{const t=document.createElement("div");t.className="toast"+(bad?" bad":"");t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),3200)};
+async function post(b){const r=await fetch(API,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(b)});return r.json()}
+async function api(a,o){try{const d=await post(Object.assign({action:a,token:tk},o||{}));
+ if(d.error==="session"){tk=null;D=null;loginV("انتهت الجلسة. سجّل الدخول من جديد.");return null}
+ if(d.error){toast(ERR[d.error]||d.error,1);return null}return d}catch(e){toast("مشكلة في الاتصال.",1);return null}}
+function loginV(msg){app.innerHTML=`<div class="top"><div><b>إدارة المؤسسة</b><small>بوابة العملاء</small></div></div><div class="wrap"><div class="card"><h2 style="margin:0 0 6px">دخول المدير</h2><label for="pw">كلمة السر</label><input id="pw" type="password" autocomplete="current-password"><div class="err" id="er">${E(msg||"")}</div><button class="btn" id="go" style="width:100%;margin-top:6px">دخول</button></div></div>`;
+ const go=async()=>{const pw=$("#pw").value;if(!pw)return;$("#go").disabled=true;$("#er").textContent="";
+  try{const d=await post({action:"admin_login",pass:pw});if(d.token){tk=d.token;await load();return}$("#er").textContent=ERR[d.error]||d.error||"تعذّر الدخول."}catch(e){$("#er").textContent="مشكلة في الاتصال."}$("#go").disabled=false};
+ $("#go").onclick=go;$("#pw").onkeydown=e=>{if(e.key==="Enter")go()}}
+async function load(){app.innerHTML=`<div class="empty" style="padding-top:90px">جارٍ التحميل…</div>`;const d=await api("admin_data");if(d){D=d;main()}}
+const cn=id=>{const c=(D.clients||[]).find(x=>x.client_id.toUpperCase()===String(id).toUpperCase());return c?c.name:id};
+const copts=(v)=>D.clients.map(c=>`<option value="${E(c.client_id)}"${c.client_id===v?" selected":""}>${E(c.name)} (${E(c.client_id)})</option>`).join("");
+const mopts=(cid,v)=>D.matters.filter(m=>m.client_id.toUpperCase()===String(cid).toUpperCase()).map(m=>`<option value="${E(m.matter_id)}"${m.matter_id===v?" selected":""}>${E(m.matter_id)} — ${E(m.title.slice(0,50))}</option>`).join("");
+const TABS=[["clients","العملاء"],["matters","القضايا"],["updates","المستجدات"],["actions","المطلوب من العميل"],["messages","الرسائل"],["settings","بيانات المؤسسة"]];
+function main(){const un=D.messages.filter(m=>!m.reply).length;
+ app.innerHTML=`<div class="top"><div><b>إدارة المؤسسة</b><small>بوابة العملاء</small></div><div style="display:flex;gap:8px"><button class="lnk" id="rf">تحديث</button><button class="lnk" id="lo">خروج</button></div></div>
+ <div class="wrap"><div class="tabs">${TABS.map(t=>`<button data-tab="${t[0]}" class="${t[0]===tab?"on":""}">${t[1]}${t[0]==="messages"&&un?`<span class="tag">${un}</span>`:""}</button>`).join("")}</div><div id="pane">${pane()}</div></div>`;
+ $("#rf").onclick=load;$("#lo").onclick=async()=>{await api("admin_logout");tk=null;D=null;loginV()};
+ app.querySelectorAll("[data-tab]").forEach(b=>b.onclick=()=>{tab=b.dataset.tab;F={c:"",m:"",q:""};main()});
+ const q=$("#q");if(q)q.oninput=()=>{F.q=q.value;$("#list").innerHTML=list()};
+ ["fc","fm"].forEach(id=>{const e=$("#"+id);if(e)e.onchange=()=>{F[id==="fc"?"c":"m"]=e.value;if(id==="fc")F.m="";main()}})}
+function pane(){const t=tab;const add=t==="settings"||t==="messages"?"":`<button class="btn" data-a="add">+ إضافة</button>`;
+ const flt=(t==="matters"||t==="updates"||t==="actions")?`<select id="fc"><option value="">كل العملاء</option>${copts(F.c)}</select>`+((t!=="matters"&&F.c)?`<select id="fm"><option value="">كل القضايا</option>${mopts(F.c,F.m)}</select>`:""):"";
+ const sr=(t==="clients"||t==="messages")?`<input id="q" placeholder="بحث" value="${E(F.q)}">`:"";
+ return `<div class="bar">${sr}${flt}${add}</div><div id="list">${list()}</div>`}
+function list(){return ({clients:Lc,matters:Lm,updates:Lu,actions:La,messages:Lg,settings:Ls})[tab]()||`<div class="empty">لا توجد بيانات.</div>`}
+const nM=c=>D.matters.filter(m=>m.client_id.toUpperCase()===c.client_id.toUpperCase()).length;
+function Lc(){const q=F.q.toLowerCase();return D.clients.filter(c=>!q||(c.name+" "+c.client_id).toLowerCase().includes(q)).map(c=>`<div class="it"><div class="t"><b>${E(c.name)}</b><small dir="ltr">${E(c.client_id)}</small></div><div class="m">${c.p?"الرقم السري: مُعيَّن (مشفّر)":"لا يوجد رقم سري"} · ${nM(c)} قضية</div><div class="ac"><button data-a="edit" data-r="${c.r}">تعديل الاسم</button><button data-a="rid" data-r="${c.r}">تغيير الرقم</button><button data-a="pin" data-r="${c.r}">رقم سري جديد</button><button class="dng" data-a="del" data-r="${c.r}">حذف</button></div></div>`).join("")}
+const flt3=(a)=>a.filter(x=>(!F.c||x.client_id.toUpperCase()===F.c.toUpperCase())&&(!F.m||(x.matter_id||"").toUpperCase()===F.m.toUpperCase()));
+function Lm(){return flt3(D.matters).map(m=>`<div class="it"><div class="t"><b>${E(m.title)}</b><small dir="ltr">${E(m.matter_id)}</small></div><div class="m">${E(cn(m.client_id))} · ${E(m.status)} · ${E(m.type)}</div><div class="m">${E(m.court)} ${m.case_no?" · "+E(m.case_no):""} ${m.next?" · القادم: "+E(m.next):""}</div><div class="ac"><button data-a="edit" data-r="${m.r}">تعديل</button><button class="dng" data-a="del" data-r="${m.r}">حذف</button></div></div>`).join("")}
+function Lu(){return flt3(D.updates).slice().sort((a,b)=>b.date<a.date?-1:1).map(u=>`<div class="it"><div class="t"><b>${E(u.headline)}</b><small dir="ltr">${E(u.date)}</small></div><div class="m">${E(cn(u.client_id))} · ${E(u.matter_id)}</div><div class="x">${E(u.details)}</div><div class="ac"><button data-a="edit" data-r="${u.r}">تعديل</button><button class="dng" data-a="del" data-r="${u.r}">حذف</button></div></div>`).join("")}
+const done=s=>/^(done|completed|closed|تم|منجز)$/i.test(String(s).trim());
+function La(){return flt3(D.actions).map(a=>`<div class="it"><div class="t"><b>${E(a.action)}</b><small>${done(a.status)?"تم":"مطلوب"}</small></div><div class="m">${E(cn(a.client_id))} · ${E(a.matter_id)} ${a.due?" · الموعد: "+E(a.due):""}</div><div class="ac"><button data-a="tog" data-r="${a.r}">${done(a.status)?"إعادته مطلوباً":"تم تنفيذه"}</button><button data-a="edit" data-r="${a.r}">تعديل</button><button class="dng" data-a="del" data-r="${a.r}">حذف</button></div></div>`).join("")}
+function Lg(){const q=F.q.toLowerCase();return D.messages.filter(m=>!q||(m.text+cn(m.client_id)).toLowerCase().includes(q)).map(m=>`<div class="it"><div class="t"><b>${E(cn(m.client_id))}${m.reply?"":'<span class="tag">بلا رد</span>'}</b><small dir="ltr">${E(m.sent)}</small></div><div class="m">${E(m.type)}${m.matter_id?" · "+E(m.matter_id):""}</div><div class="x">${E(m.text)}</div><label>الرد</label><textarea id="rp${m.r}">${E(m.reply)}</textarea><div class="ac"><button data-a="reply" data-r="${m.r}">حفظ الرد</button></div></div>`).join("")}
+const SET=[["about","نبذة عن المؤسسة (كل فقرة في سطر)",1],["areas","مجالات العمل (كل مجال في سطر)",1],["phone","الهاتف",0],["whatsapp","واتساب",0],["email","البريد الإلكتروني",0],["address","العنوان",1],["map","رابط الخريطة (https://)",0],["hours","ساعات العمل",1]];
+function Ls(){return SET.map(([k,l,ar2])=>{const v=D.settings[k]||{ar:"",en:""};const f=ar2?(x,id)=>`<textarea id="${id}" dir="auto">${E(x)}</textarea>`:(x,id)=>`<input id="${id}" value="${E(x)}" dir="auto">`;
+ return `<div class="it"><b>${l}</b><label>بالعربية</label>${f(v.ar,"s_"+k+"_ar")}${ar2?`<label>بالإنجليزية</label>${f(v.en,"s_"+k+"_en")}`:""}<div class="ac"><button data-a="set" data-k="${k}">حفظ</button></div></div>`}).join("")}
+// ---- dialogs ----
+function dlg(title,body,okText,onOk,extra){const o=document.createElement("div");o.className="ov";o.innerHTML=`<div class="md"><h3>${title}</h3>${body}<div class="err" id="de"></div><div class="row">${okText?`<button class="btn" id="dok">${okText}</button>`:""}<button class="lnk" id="dno">${okText?"إلغاء":"إغلاق"}</button></div></div>`;document.body.appendChild(o);
+ const close=()=>o.remove();o.querySelector("#dno").onclick=close;
+ if(okText)o.querySelector("#dok").onclick=async()=>{const b=o.querySelector("#dok");b.disabled=true;const r=await onOk(o);b.disabled=false;if(r)close()};
+ if(extra)extra(o);return o}
+const val=(o,k)=>o.querySelector(`[data-k="${k}"]`).value;
+const fld=(k,l,v,t)=>`<label>${l}</label>`+(t==="area"?`<textarea data-k="${k}" dir="auto">${E(v)}</textarea>`:`<input data-k="${k}" value="${E(v)}"${t==="date"?' type="date"':""} dir="${t==="ltr"?"ltr":"auto"}">`);
+const showPin=(name,pin)=>dlg("الرقم السري الجديد",`<div class="m">العميل: <b>${E(name)}</b></div><div class="pinbox">${E(pin)}</div><div class="m">يُعرض مرة واحدة فقط ولا يُحفظ في الجدول. أرسله للعميل الآن بشكل خاص.</div>`,"","",o=>{});
+const rowOf=r=>({clients:D.clients,matters:D.matters,updates:D.updates,actions:D.actions})[tab].find(x=>String(x.r)===String(r));
+const expOf=x=>tab==="clients"?[x.client_id,x.name]:[x.client_id,x.matter_id];
+const today=()=>new Date().toISOString().slice(0,10);
+function form(x){ // add / edit dialog for the current tab
+ const v=x||{};const t=tab;let body="";
+ if(t==="clients")body=fld("client_id","رقم العميل (حروف إنجليزية وأرقام)",v.client_id||"","ltr")+fld("name","الاسم",v.name||"");
+ else{body=`<label>العميل</label><select data-k="client_id">${copts(v.client_id||F.c)}</select>`;
+  if(t==="matters")body+=fld("matter_id","رمز القضية (مثل M1)",v.matter_id||"","ltr")+fld("title","عنوان القضية",v.title||"","area")+fld("case_no","رقم القضية",v.case_no||"")+fld("type","النوع",v.type||"")+fld("court","المحكمة / الجهة",v.court||"")+`<label>الحالة</label><input data-k="status" list="sl" value="${E(v.status||"")}"><datalist id="sl"><option>قيد التنفيذ<option>قيد المراجعة<option>بانتظار الجهة<option>جلسة محددة<option>منتهية<option>معلّقة</datalist>`+fld("next","الموعد القادم",v.next||"");
+  else{body+=`<label>القضية</label><select data-k="matter_id"></select>`;
+   if(t==="updates")body+=fld("date","التاريخ",v.date||today(),"date")+fld("headline","عنوان المستجد",v.headline||"")+fld("details","التفاصيل",v.details||"","area");
+   else body+=fld("action","الإجراء المطلوب من العميل",v.action||"","area")+fld("due","الموعد النهائي (اختياري)",v.due||"","date")+`<label>الحالة</label><select data-k="status"><option value="مطلوب"${done(v.status)?"":" selected"}>مطلوب</option><option value="تم"${done(v.status)?" selected":""}>تم</option></select>`}}
+ const title=(x?"تعديل":"إضافة")+" — "+TABS.find(a=>a[0]===t)[1];
+ dlg(title,body,"حفظ",async o=>{const values={};o.querySelectorAll("[data-k]").forEach(e=>values[e.dataset.k]=e.value);
+  const d=await api("admin_save",{table:t,r:x?x.r:0,expect:x?expOf(x):undefined,values});if(!d)return false;
+  toast("تم الحفظ");await load2();if(d.pin)showPin(values.name,d.pin);return true},o=>{
+   const cs=o.querySelector('select[data-k="client_id"]'),ms=o.querySelector('select[data-k="matter_id"]');
+   if(cs&&ms){const fill=()=>{ms.innerHTML=mopts(cs.value,v.matter_id||F.m);};fill();cs.onchange=()=>{v.matter_id="";fill()}}})}
+async function load2(){const d=await api("admin_data");if(d){D=d;main()}}
+app.onclick=async e=>{const b=e.target.closest("[data-a]");if(!b)return;const a=b.dataset.a,r=b.dataset.r;
+ if(a==="add")return form(null);
+ if(a==="set"){const k=b.dataset.k,ar=$("#s_"+k+"_ar").value,en=($("#s_"+k+"_en")||{value:""}).value;const d=await api("admin_setting",{key:k,ar,en});if(d){D.settings[k]={ar,en};toast("تم الحفظ")}return}
+ if(a==="reply"){const m=D.messages.find(x=>String(x.r)===r),t=$("#rp"+r).value;const d=await api("admin_reply",{r:m.r,expect:m.id,reply:t});if(d){m.reply=t;m.rd=d.rd;toast("تم حفظ الرد");main()}return}
+ const x=rowOf(r);if(!x)return;
+ if(a==="edit")return form(x);
+ if(a==="tog"){const d=await api("admin_save",{table:"actions",r:x.r,expect:expOf(x),values:Object.assign({},x,{status:done(x.status)?"مطلوب":"تم"})});if(d){toast("تم");load2()}return}
+ if(a==="del"){const msg=tab==="clients"?"حذف العميل وكل قضاياه ومستجداته؟ لا يمكن التراجع.":tab==="matters"?"حذف القضية وكل مستجداتها والإجراءات المطلوبة فيها؟":"حذف هذا السجل؟";
+  if(!confirm(msg))return;const d=await api("admin_delete",{table:tab,r:x.r,expect:expOf(x)});if(d){toast("تم الحذف");load2()}return}
+ if(a==="pin"){if(!confirm("إنشاء رقم سري جديد لهذا العميل؟ سيتوقف رقمه القديم فوراً."))return;const d=await api("admin_pin",{id:x.client_id});if(d)showPin(x.name,d.pin);return}
+ if(a==="rid")dlg("تغيير رقم العميل",`<div class="m">يُحدَّث الرقم في القضايا والمستجدات والإجراءات والرسائل. رقمه السري لا يتغير.</div>`+fld("to","الرقم الجديد",x.client_id,"ltr"),"حفظ",async o=>{const d=await api("admin_rename",{from:x.client_id,to:val(o,"to")});if(!d)return false;toast("تم التغيير");await load2();return true})};
+loginV();
+</script>
+</body>
+</html>
