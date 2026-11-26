@@ -1,8 +1,7 @@
 {
-  "id": "admin.html",
-  "name": "إدارة مؤسسة بلال نصر الدين للمحاماة",
+  "name": "إدارة BN International",
   "short_name": "إدارة BN",
-  "description": "لوحة إدارة بوابة العملاء.",
+  "description": "لوحة إدارة بوابة العملاء",
   "start_url": "admin.html",
   "scope": "./",
   "display": "standalone",
@@ -13,22 +12,23 @@
   "dir": "rtl",
   "icons": [
     {
-      "src": "icons/icon-192.png",
+      "src": "admin-icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icons/icon-512.png",
+      "src": "admin-icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icons/icon-maskable-512.png",
+      "src": "admin-icon-maskable-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
     }
-  ]
+  ],
+  "prefer_related_applications": false
 }
